@@ -1,57 +1,59 @@
-# Animate-3D-REST-API
-The [DeepMotion](https://www.deepmotion.com) Animate 3D REST API can be used to create animations, download FBX, BVH, and other formats, and much more.
-
-## Product Information
-To learn more about AI Motion Capture and Body Tracking see the [Animate 3D](https://www.deepmotion.com/animate-3d) product page.
-
-## API Documentation
-
 # Animate 3D REST API
 
 ## Revisions
 
-_Alpha v1.0._
+_Alpha v1.0.0_
 
 Initial rest APIs
 
-_Alpha v1.0._
+_Alpha v1.0.1_
 
 Added model parameter to the /process API
 
-_Alpha v1.2._
+_Alpha v1.2.0_
 
 Added custom character end points /character
 
-_Alpha v1.2._
+_Alpha v1.2.1_
 
 Added the “sim” parameter to API 3: Start Video Processing
 
-_Alpha v1.2._
+_Alpha v1.2.2_
 
 Added the “camera” parameter to API 3: Start VideoProcessing
 
-_Alpha v1.3._
+_Alpha v1.3.0_
 
 Added webhook APIs
 
-_Alpha v1.4._
+_Alpha v1.4.0_
 
 Added footLockingMode parameter to the /process API
 Added new minutesBalance API
 
-_Alpha v1.4._
+_Alpha v1.4.1_
 
 Added flag “createThumb” to /character/storeModelAPI
+
+_Alpha v1.5.0_
+
+Exposed mp4 render out parameters in /process API
+Added Face Tracking parameterin /process API
+
+_Alpha v1.5.1_
+
+Added /videoInfo API
 
 The Animate 3D REST API lets you convert videos into3D animations without having to use the
 DeepMotionWeb Portal. Instead you can upload, process,and download the resulting FBX/BVH
 animations directly from an external application likea web or desktop app.
 
+
 ## Authentication
 
 ###### The Animate 3D REST API uses basic HTTP Authentication to keep your requests and data
 
-###### secure. To use theAPIyou will need a Client ID anda Client Secret which are provided by
+###### secure. To use theAPIyou will need a Client ID and a Client Secret which are provided by
 
 DeepMotion. If you do not have these please contactDeepMotion Support or your sales representative.
 
@@ -60,8 +62,7 @@ request:
 
 Authorization: Basic Base64(<clientId>:<clientSecret>)
 
-
-where the value of<clientId>:<clientSecret>is **base 64** encoded. For Example, if your Client ID
+where the value of `<clientId>:<clientSecret>` is **base 64** encoded. For Example, if your Client ID
 is1a2band your client Secret is3c4dthen your authorizationheader should look like this:
 
 Authorization: Basic MWEyYjozYzRk
@@ -98,6 +99,7 @@ Method + URI GET {host}/session/auth
 ```
 Header(s) Authorization: Basic Base64(<clientId>:<clientSecret>)
 ```
+
 ```
 Request
 ```
@@ -113,7 +115,6 @@ Domain=.deepmotion.com; Path=/; Expires=Mon, 03 Aug 2020
 (Note: dmsess is the session cookie. This cookie needsto be sent in
 all subsequent REST API calls.
 ```
-
 ```
 Sample Request Header for other API calls:
 cookie:dmsess=s%3AEsF23MoyDEq7tTWQM8KfA_wjKkSrOFwU.2fjJ
@@ -157,6 +158,7 @@ POST request to url:
 Put request to resumable url/url:
 attach raw bytes of the video file in the requestbody.
 ```
+
 **API 3: Start Video Processing**
 
 ```
@@ -171,77 +173,91 @@ Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
 ```
 ```
 Request POST body should include a JSON object:
-```
-
 {
 “url”: <upload url>
 “processor”: <processor_id>
 “params": [<params>, ...]
 }
-
+```
+```
 <upload_url> should match url returned from GET /uploadrequest
-
+```
+```
 <processor_id> specifies which processor to use toprocess the video
 file, must be one of the following:
-
+```
 ```
 Processor Id Description
 ```
 ```
 video2anim Deepmotion video to animation processor
 ```
+```
 <params> specifies additional parameters that willbe passed to the
 specified processor, for example:
 "params": [
 "config=configDefault",formats=bvh,fbx,mp4,model=<modelId>]
-
-Additional important parameter: **sim**
-
-###### This physics simulation parameter needs more clarification.This
-
-###### parameter influences Pose Estimation result to improveit in some
-
-###### cases like body parts inter penetration etc.If wewould like to turn
-
+```
+```
+Additional important parameter: sim
+This physics simulation parameter needs more clarification.This
+parameter influences Pose Estimation result to improveit in some
+cases like body parts inter penetration etc.If wewould like to turn
 this ON, add sim=1 OR add sim=0 to turn it OFF. Ifwe don’t add this
 parameter, simulation is turned off by default.
-
-For camera behavior in output video generation (mp4for now), the
-default value for the **camera** parameter is **render.camera=closeup**
-which always keeps the simulated character in thecamera frame with
-maximum zoom possible. **render.camera=fixed** is theother value that
-keeps the camera stationary.
-
-###### Another new parameter is: poseEstimation.footLockingMode or
-
-###### simply footLockingMode
-
 ```
+```
+For camera behavior in output video generation (mp4for now), the
+default value for the camera parameter is render.camera=closeup
+which always keeps the simulated character in thecamera frame with
+maximum zoom possible. render.camera=fixed is theother value that
+keeps the camera stationary.
+```
+
+Another new parameter is: **poseEstimation.footLockingMode** or
+simply **footLockingMode**
 ● This parameter value can be one of the below:
-○ auto : default mode, automatic switching between
+○ **auto** : default mode, automatic switching between
 locking and gliding modes of the foot, recommendedfor
 general cases
-```
-###### ○ always : forced foot locking all the time. only used
-
-```
+○ **always** : forced foot locking all the time. only used
 when Auto mode can not remove all the foot gliding
 unsired
-○ never : forced to disable foot locking and character
+○ **never** : forced to disable foot locking and character
 grounding. used when the motion is completely in theair
 or in the water and therefore neither foot lockingnor
 character grounding is needed.
-```
-
-###### ○ grounding : forced disabling foot locking, however
-
-```
+○ **grounding** : forced disabling foot locking, however
 character is still grounded. Only used when Auto mode
 prevents the desired foot gliding (i.e. during shuffling
 dances) in the motion or locks the foot for too longon
 the ground during fast and short foot/ground contacts
 (i.e. during sprints or jumps.)
-```
+
+**Mp4 render out parameters:**
+
+1. Please add this below parameter, if you would liketo generate the
+mp4 with only animated character in a default background(and without
+the original video):
+**render.sbs=**
+2. To replace the default background with a solidcolor (for green
+screening etc.)
+**render.sbs=
+render.bgColor=0,177,64,0** (RGBA color code in therange of 0-
+for each channel, please note, the last channel (alpha)value is not in
+effect )
+3. To set a studio like background with a solid colortint
+**render.sbs=
+render.backdrop=studio
+render.bgColor=0,177,64,**
+4. To enable character shadow
+**render.shadow=**
+
+**Face Tracking parameter:**
+Enables face tracking along with body tracking
+**trackFace=**
+
+
 ```
 Response JSON object:
 {
@@ -292,7 +308,6 @@ Each element in status array is a JSON object:
 ```
 Status Name Description
 ```
-
 ```
 PROGRESS Request is still being processed
 ```
@@ -306,6 +321,7 @@ being retried
 ```
 FAILURE Request has failed
 ```
+
 ```
 <status details> for PROGRESS:
 {
@@ -353,9 +369,6 @@ multiple processing requests.
 Response JSON object:
 {
 “count”: <number of records in links array>,
-```
-
-```
 “links”: [
 <link>,
 ... ...
@@ -365,6 +378,9 @@ Response JSON object:
 ```
 Each element in links array is a JSON object:
 {
+```
+
+```
 “rid”: <request id>,
 “name”: <name of the video>
 “size”: <size of the video>
@@ -404,25 +420,30 @@ object will look like:
 ```
 **API 6: List All Video Processing requests by Status**
 
-
-**Desc** List past and current request ids
+```
+Desc List past and current request ids
 Note: failed jobs and old jobs may be removed by systemafter a
 predefined retention period
-
-**Method + URI** GET {host}/list
+```
+```
+Method + URI GET {host}/list
 GET {host}/list/status1,...,status
+```
+```
+Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
+```
 
-**Header(s)** cookie:dmsess=<cookie-value-returned-from-authentication-api>
-
-**Request** Client can request to get list of existing requestids of current user
-
+```
+Request Client can request to get list of existing requestids of current user
+```
 ```
 Client can specify one or multiple status value(s)to retrieve only
 request ids with the same status value(s). For example,GET
 /list/PROGRESS will only return list of requests thatare still being
 processed
 ```
-**Response** JSON object:
+```
+Response JSON object:
 {
 "count": <number of records in the rids array>,
 "list": [
@@ -438,7 +459,7 @@ processed
 ... ...
 ]
 }
-
+```
 ```
 Each element in list is a JSON object with the followingfields defined:
 ```
@@ -461,7 +482,6 @@ fileDuration Input video duration in seconds
 status Current status (STARTING, PROGRESS, SUCCESS,
 FAILURE, RETRY)
 ```
-
 ```
 ctime Creation time (milliseconds since epoch)
 ```
@@ -469,6 +489,7 @@ ctime Creation time (milliseconds since epoch)
 mtime Last modification time (milliseconds since epoch)
 ```
 **API 7: Minutes Balance**
+
 
 ```
 Desc Retrieves Minutes Balance for an user
@@ -487,6 +508,33 @@ Response JSON object:
 {
 "minutes":<value>
 }
+```
+**API 8: Input Video Information**
+
+```
+Desc Get Video information such as resolution, fps etc.
+```
+```
+Method + URI POST {host}/videoInfo
+```
+```
+Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
+```
+```
+Request POST body should include a JSON object:
+{
+“url”: <upload url>
+}
+```
+```
+<upload_url> should match url returned from GET /uploadrequest
+AND the video needs to be uploaded to that url inGCS before calling
+this API
+```
+```
+Response JSON object:
+{"width":1080,"height":1080,"fps":30,"duration":3,"codec":"h264","size":
+186615}
 ```
 
 ### Custom Character APIs
@@ -767,5 +815,4 @@ Response JSON object:
 "deleted": true
 }
 ```
-
 
