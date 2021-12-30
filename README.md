@@ -20,7 +20,7 @@ Added the “sim” parameter to API 3: Start Video Processing
 
 _Alpha v1.2.2_
 
-Added the “camera” parameter to API 3: Start VideoProcessing
+Added the “camera” parameter to API 3: Start Video Processing
 
 _Alpha v1.3.0_
 
@@ -33,7 +33,7 @@ Added new minutesBalance API
 
 _Alpha v1.4.1_
 
-Added flag “createThumb” to /character/storeModelAPI
+Added flag “createThumb” to /character/storeModel API
 
 _Alpha v1.5.0_
 
@@ -43,26 +43,28 @@ Added Face Tracking parameterin /process API
 _Alpha v1.5.1_
 
 Added /videoInfo API
+Added videoSpeedMultiplier, poseFilteringStrength, rootAtOrigin parameters & new mp4 options in
+/process API
 
-The Animate 3D REST API lets you convert videos into3D animations without having to use the
+The Animate 3D REST API lets you convert videos into 3D animations without having to use the
 DeepMotionWeb Portal. Instead you can upload, process,and download the resulting FBX/BVH
-animations directly from an external application likea web or desktop app.
+animations directly from an external application like a web or desktop app.
 
 
 ## Authentication
 
 ###### The Animate 3D REST API uses basic HTTP Authentication to keep your requests and data
 
-###### secure. To use theAPIyou will need a Client ID and a Client Secret which are provided by
+###### secure. To use theAPIyou will need a Client ID anda Client Secret which are provided by
 
-DeepMotion. If you do not have these please contactDeepMotion Support or your sales representative.
+DeepMotion. If you do not have these please contact DeepMotion Support or your sales representative.
 
-To retrieve your API access token you need to addthe following Authorization header to your token
+To retrieve your API access token you need to add the following Authorization header to your token
 request:
 
 Authorization: Basic Base64(<clientId>:<clientSecret>)
 
-where the value of `<clientId>:<clientSecret>` is **base 64** encoded. For Example, if your Client ID
+where the value of<clientId>:<clientSecret>is **base 64** encoded. For Example, if your Client ID
 is1a2band your client Secret is3c4dthen your authorizationheader should look like this:
 
 Authorization: Basic MWEyYjozYzRk
@@ -72,25 +74,35 @@ Authorization: Basic MWEyYjozYzRk
 **Note** : Optionally it is possible to send a unique useridentifier (via x-useruid HTTP(S) header) along
 with the authorization header. See example below:
 
-Curl -v -H “Authorization: Basic MWEyYjozYzRk” -H“x-useruid:me.us@test.com” -X GET “{host}/auth”
+Curl -v -H “Authorization: Basic MWEyYjozYzRk” -H “x-useruid:me.us@test.com” -X GET “{host}/auth”
 
 ## API Endpoints
 
-###### All Animate 3D API requests must be made against thefollowing base URL using the HTTPS
+###### All Animate 3D API requests must be made against the following base URL using the HTTPS
 
 ###### protocol and port:
 
 Staging Environment: https://petest.deepmotion.com:
 Production Environment: (Contact DeepMotion)
 
+**For using our API from browser javascript** locally(to avoid CORS error), please send request from
+any of the origin below:
+[http://localhost:](http://localhost:)
+[http://localhost:](http://localhost:)
+For production deployment, please let us know your production url (scheme, host, port), so that we can
+configure our CORS setting accordingly.
+
 ## API Reference
 
 **API 1: Get Access Token**
 
 ```
-Desc Authenticate client credentials and returns a timelimited session
-cookie to be used in the subsequent REST API calls.After the session
-expiration, this API needs to be called again to geta new session
+Desc Authenticate client credentials and returns a time limited session
+```
+
+```
+cookie to be used in the subsequent REST API calls. After the session
+expiration, this API needs to be called again to get a new session
 cookie
 ```
 ```
@@ -99,7 +111,6 @@ Method + URI GET {host}/session/auth
 ```
 Header(s) Authorization: Basic Base64(<clientId>:<clientSecret>)
 ```
-
 ```
 Request
 ```
@@ -133,8 +144,9 @@ Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
 ```
 ```
 Request Query parameters:
-<name>: video file name (optional)
-<resumable>: 0 or 1(default) returns resumable orregular signed url
+<name>: video/image file name with extension (like test.mp4 or
+test.jpg)
+<resumable>: 0 or 1(default) returns resumable or regular signed url
 (optional)
 ```
 ```
@@ -144,25 +156,27 @@ Response JSON object:
 }
 ```
 ```
-After retrieving the url, actual video upload is requiredto that storage
+After retrieving the url, actual video upload is required to that storage
 url. If ’resumable’ option is set in the request, we need one POST and
-one subsequent PUT request, otherwise a single PUTrequest will do
+```
+
+```
+one subsequent PUT request, otherwise a single PUT request will do
 the job.
 ```
 ```
 POST request to url:
 <x-goog-resumable>: start (set in the request header)
-<location>: resumable url (set in the response headerby server)
+<location>: resumable url (set in the response header by server)
 ```
 ```
 Put request to resumable url/url:
-attach raw bytes of the video file in the requestbody.
+attach raw bytes of the video file in the request body.
 ```
-
 **API 3: Start Video Processing**
 
 ```
-Desc Start processing video after file has been uploadedto the designated
+Desc Start processing video after file has been uploaded to the designated
 URL
 ```
 ```
@@ -180,10 +194,10 @@ Request POST body should include a JSON object:
 }
 ```
 ```
-<upload_url> should match url returned from GET /uploadrequest
+<upload_url> should match url returned from GET /upload request
 ```
 ```
-<processor_id> specifies which processor to use toprocess the video
+<processor_id> specifies which processor to use to process the video
 file, must be one of the following:
 ```
 ```
@@ -193,69 +207,105 @@ Processor Id Description
 video2anim Deepmotion video to animation processor
 ```
 ```
-<params> specifies additional parameters that willbe passed to the
+<params> specifies additional parameters that will be passed to the
 specified processor, for example:
 "params": [
-"config=configDefault",formats=bvh,fbx,mp4,model=<modelId>]
+"config=configDefault",formats=bvh,fbx,mp4,model=<modelId> ]
+```
+```
+For static pose, png/jpg can be included in the formats parameter, like:
+formats=bvh,fbx,png (to output rendered image instead of rendered
+video)
 ```
 ```
 Additional important parameter: sim
+```
+
 This physics simulation parameter needs more clarification.This
-parameter influences Pose Estimation result to improveit in some
+parameter influences Pose Estimation result to improve it in some
 cases like body parts inter penetration etc.If wewould like to turn
-this ON, add sim=1 OR add sim=0 to turn it OFF. Ifwe don’t add this
+this ON, add sim=1 OR add sim=0 to turn it OFF. If we don’t add this
 parameter, simulation is turned off by default.
-```
-```
-For camera behavior in output video generation (mp4for now), the
-default value for the camera parameter is render.camera=closeup
-which always keeps the simulated character in thecamera frame with
-maximum zoom possible. render.camera=fixed is theother value that
-keeps the camera stationary.
-```
+
+Added face tracking support:
+**trackFace**
+● Enable tracking basic facial expressions. Compatible with
+character models that contain ARKIT blend shapes. Enabling
+this option increases animation processing time.
+● Default value is 0 and value can be either 0 or 1
 
 Another new parameter is: **poseEstimation.footLockingMode** or
 simply **footLockingMode**
 ● This parameter value can be one of the below:
 ○ **auto** : default mode, automatic switching between
-locking and gliding modes of the foot, recommendedfor
+locking and gliding modes of the foot, recommended for
 general cases
 ○ **always** : forced foot locking all the time. only used
 when Auto mode can not remove all the foot gliding
 unsired
 ○ **never** : forced to disable foot locking and character
-grounding. used when the motion is completely in theair
-or in the water and therefore neither foot lockingnor
+grounding. used when the motion is completely in the air
+or in the water and therefore neither foot locking nor
 character grounding is needed.
 ○ **grounding** : forced disabling foot locking, however
 character is still grounded. Only used when Auto mode
 prevents the desired foot gliding (i.e. during shuffling
-dances) in the motion or locks the foot for too longon
+dances) in the motion or locks the foot for too long on
 the ground during fast and short foot/ground contacts
 (i.e. during sprints or jumps.)
 
+We have added few new parameters for better body tracking results:
+
+**poseEstimation.videoSpeedMultiplier** or simply
+**videoSpeedMultiplier**
+● For input videos that have been slowed down, enabling this
+option can help improve the resulting animation quality. For
+example, if your input video speed moves at 1/2 speed, then set
+the speed multiplier to 2x to improve animation quality
+● Default value is 1.0 and range is 1.0 - 8.
+
+**poseEstimation.poseFilteringStrength** or simply
+**poseFilteringStrength**
+
+
+```
+● Applies an advanced AI filter that helps remove jitter and
+produce smoother animations though may result in lower
+animation accuracy for certain frames or sequences
+● Default value is 0.0 and range is 0.0 - 1.
+```
+**rootAtOrigin**
+● Place a root joint at the origin of the output character. This is
+helpful in some cases, for example, for UE4 retargeting.
+● Default value is 0 and value can be either 0 or 1
+
 **Mp4 render out parameters:**
 
-1. Please add this below parameter, if you would liketo generate the
-mp4 with only animated character in a default background(and without
+1. Please add this below parameter, if you would like to generate the
+mp4 with only animated character in a default background (and without
 the original video):
 **render.sbs=**
-2. To replace the default background with a solidcolor (for green
+2. To replace the default background with a solid color (for green
 screening etc.)
 **render.sbs=
 render.bgColor=0,177,64,0** (RGBA color code in therange of 0-
-for each channel, please note, the last channel (alpha)value is not in
+for each channel, please note, the last channel (alpha) value is not in
 effect )
-3. To set a studio like background with a solid colortint
+3. To set a studio like background with a solid color tint
 **render.sbs=
 render.backdrop=studio
 render.bgColor=0,177,64,**
 4. To enable character shadow
 **render.shadow=**
-
-**Face Tracking parameter:**
-Enables face tracking along with body tracking
-**trackFace=**
+5. **render.includeAudio**
+    ● When enabled, it includes the audio of the original input video in
+       the generated animation.
+    ● Default value is 1 and value can be either 0 or 1
+6. **render.CamMode**
+values are below. Default is 0
+0 (Cinematic) The character is kept in the center of the frame
+1 (Fixed) Camera will stay fixed relative to the background
+2 (Face) Camera keeps the torso and face in the center of frame
 
 
 ```
@@ -277,11 +327,11 @@ GET {host}/status/rid1,rid2,..,rid
 Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
 ```
 ```
-Request Clients can request current status of previously submittedprocessing
+Request Clients can request current status of previously submitted processing
 requests (API3).
 ```
 ```
-Use comma (‘,’) to separate multiple request ids ifretrieving status for
+Use comma (‘,’) to separate multiple request ids if retrieving status for
 more than 1 request.
 ```
 ```
@@ -337,13 +387,13 @@ FAILURE Request has failed
 }
 ```
 ```
-<status details> for RETRY and FAILURE include lasterror message.
+<status details> for RETRY and FAILURE include last error message.
 Currently the format is:
 {
 “exc_message”: <exception message, if any>,
 “exc_type”: <exception type, if any>
 }
-But please note the format may change if we decideto mask error
+But please note the format may change if we decide to mask error
 information (or pass more information) to client applications.
 ```
 **API 5: Get Download URLs**
@@ -359,10 +409,10 @@ GET {host}/download/rid1,rid2,...,rid
 Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
 ```
 ```
-Request Clients can request download URLs for finished processingrequests.
+Request Clients can request download URLs for finished processing requests.
 ```
 ```
-Use comma (‘,’) to separate request ids if retrievingdownload URLs for
+Use comma (‘,’) to separate request ids if retrieving download URLs for
 multiple processing requests.
 ```
 ```
@@ -390,15 +440,15 @@ Each element in links array is a JSON object:
 {
 “name”: <name of the downloadable item>
 “files”: <links of the files by extension> [
-{ <file type>: <URL to download the correspondingfile>},
-{<file type>: <URL to download the correspondingfile>}
+{ <file type>: <URL to download the corresponding file>},
+{<file type>: <URL to download the corresponding file>}
 ]
 }
 ]
 }
 ```
 ```
-For example, if a processor outputs both bvh and fbxfiles, then the
+For example, if a processor outputs both bvh and fbx files, then the
 download link object will look like:
 {
 “rid”: “1234567890”,
@@ -411,8 +461,8 @@ download link object will look like:
 }
 ```
 ```
-Please note that if the specified request has notfinished yet or has
-failed, the response will not include any downloadurls, and the link
+Please note that if the specified request has not finished yet or has
+failed, the response will not include any download urls, and the link
 object will look like:
 {
 “rid”: “1234567890”
@@ -422,7 +472,7 @@ object will look like:
 
 ```
 Desc List past and current request ids
-Note: failed jobs and old jobs may be removed by systemafter a
+Note: failed jobs and old jobs may be removed by system after a
 predefined retention period
 ```
 ```
@@ -434,12 +484,12 @@ Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
 ```
 
 ```
-Request Client can request to get list of existing requestids of current user
+Request Client can request to get list of existing request ids of current user
 ```
 ```
-Client can specify one or multiple status value(s)to retrieve only
-request ids with the same status value(s). For example,GET
-/list/PROGRESS will only return list of requests thatare still being
+Client can specify one or multiple status value(s) to retrieve only
+request ids with the same status value(s). For example, GET
+/list/PROGRESS will only return list of requests that are still being
 processed
 ```
 ```
@@ -461,7 +511,7 @@ Response JSON object:
 }
 ```
 ```
-Each element in list is a JSON object with the followingfields defined:
+Each element in list is a JSON object with the following fields defined:
 ```
 ```
 Field Description
@@ -527,8 +577,8 @@ Request POST body should include a JSON object:
 }
 ```
 ```
-<upload_url> should match url returned from GET /uploadrequest
-AND the video needs to be uploaded to that url inGCS before calling
+<upload_url> should match url returned from GET /upload request
+AND the video needs to be uploaded to that url in GCS before calling
 this API
 ```
 ```
@@ -546,8 +596,8 @@ below.
 **API 1: Model Upload Url**
 
 ```
-Desc Retrieves signed urls to upload 3d model data(fbxformat) and
-thumbnail(preferably png format)
+Desc Retrieves signed urls to upload 3d model data(fbx, glb, gltf, or vrm
+format) and thumbnail(preferably png format)
 ```
 ```
 Method + URI GET {host}/character/getModelUploadUrl
@@ -557,10 +607,10 @@ Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
 ```
 ```
 Request Query parameters:
-<name>: base name of the files (without extension)(optional)
-<modelExt>: file extension of the model file. Example:fbx (optional)
-<thumbExt>: file extension of the thumb file. Example:jpg (optional)
-<resumable>: 0 or 1(default) returns resumable orregular signed url
+<name>: base name of the files (without extension) (optional)
+<modelExt>: file extension of the model file. Example: fbx (optional)
+<thumbExt>: file extension of the thumb file. Example: jpg (optional)
+<resumable>: 0 or 1(default) returns resumable or regular signed url
 (optional)
 ```
 ```
@@ -571,24 +621,24 @@ Response JSON object:
 }
 ```
 ```
-After retrieving the urls, actual model & thumbnailupload are required
-to that storage urls. If ’resumable’ option is setin the request, we need
-one POST and one subsequent PUT request for each signedurl,
-otherwise a single PUT request will do the job perurl.
+After retrieving the urls, actual model & thumbnail upload are required
+to that storage urls. If ’resumable’ option is set in the request, we need
+one POST and one subsequent PUT request for each signed url,
+otherwise a single PUT request will do the job per url.
 ```
 ```
 POST request to url:
 <x-goog-resumable>: start (set in the request header)
-<location>: resumable url (set in the response headerby server)
+<location>: resumable url (set in the response header by server)
 ```
 ```
 PUT request to resumable url location/url:
-attach raw bytes of the model or thumbnail file inthe request body.
+attach raw bytes of the model or thumbnail file in the request body.
 ```
 **API 2: Store Model**
 
 ```
-Desc Store the asset paths returned from getModelUploadUrlin database
+Desc Store the asset paths returned from getModelUploadUrl in database
 ```
 
 ```
@@ -599,19 +649,19 @@ Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
 ```
 ```
 Request Body parameters:
-<modelUrl>: model url returned from API 1 (optionalif <modelId> is
+<modelUrl>: model url returned from API 1 (optional if <modelId> is
 provided)
 <modelName>: model name (optional)
 <thumbUrl>: thumbnail url returned from API 1 (optional)
-<modelId>: model id to update existing model info(name or thumb)
+<modelId>: model id to update existing model info (name or thumb)
 (optional if <modelUrl> is provided)
-<createThumb>: 0 (default) or 1, indicate if the thumbnailof the model
+<createThumb>: 0 (default) or 1, indicate if the thumbnail of the model
 needs to be generated (optional)
 ```
 ```
 Response JSON object:
 {
-“modelId: Unique model id that can be passed tovideo process API
+“modelId: Unique model id that can be passed to video process API
 }
 ```
 **API 3: List Models**
@@ -634,10 +684,10 @@ Request Query parameters:
 Response JSON object:
 [
 {
-“Id: Unique model id that can be passed to videoprocess API
+“Id: Unique model id that can be passed to video process API
 “name”: name of the model
 “thumb”: url of the thumbnail if exist
-“rigId”: rigTemplate id with which this model isassociated with
+“rigId”: rigTemplate id with which this model is associated with
 “ctime”: creation timestamp
 “mtime”: modification timestamp
 }
@@ -650,10 +700,10 @@ Response JSON object:
 
 ##### Headers:
 
-HTTP POST payloads that are delivered to your webhook'sconfigured URL endpoint will contain the
+HTTP POST payloads that are delivered to your webhook's configured URL endpoint will contain the
 following headers:
 X-DeepMotion-Signature: <signature>
-Note: Signature is your client ID. It is supposedto be verified by your event handling code.
+Note: Signature is your client ID. It is supposed to be verified by your event handling code.
 
 ##### Body:
 
@@ -663,7 +713,7 @@ The event body is a JSON object described below:
 "data" <event data>
 }
 
-The following table explains the currently supportedevent types and their data sub-attributes. Data
+The following table explains the currently supported event types and their data sub-attributes. Data
 sub-attributes is also a JSON object:
 
 ```
@@ -698,7 +748,7 @@ Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
 Request JSON object:
 {
 "url": <endpoint URL>,
-"events": <array of events that would registerwith this endpoint>
+"events": <array of events that would register with this endpoint>
 }
 ```
 
@@ -708,7 +758,7 @@ Response JSON object:
 "id": <endpoint ID>,
 "object": "webhook_endpoint",
 "url": <endpoint URL>,
-"events": <array of events that would registerwith this endpoint>
+"events": <array of events that would register with this endpoint>
 }
 ```
 **API 2: Retrieve a webhook endpoint**
@@ -732,7 +782,7 @@ Response:
 "id": <endpoint ID>,
 "object": "webhook_endpoint",
 "url": <endpoint URL>,
-"events": <array of events that would registerwith this endpoint>
+"events": <array of events that would register with this endpoint>
 }
 ```
 **API 3: List webhook endpoints**
@@ -758,7 +808,7 @@ Response JSON object:
 "id": <endpoint ID>,
 "object": "webhook_endpoint",
 "url": <endpoint URL>,
-"events": <array of events that wouldregister with this endpoint>
+"events": <array of events that would register with this endpoint>
 }, ...
 ```
 
@@ -781,7 +831,7 @@ Header(s) cookie:dmsess=<cookie-value-returned-from-authentication-api>
 Request JSON object:
 {
 "url": <endpoint URL>,
-"events": <array of events that would registerwith this endpoint>
+"events": <array of events that would register with this endpoint>
 }
 ```
 ```
@@ -790,7 +840,7 @@ Response JSON object:
 "id": <endpoint ID>,
 "object": "webhook_endpoint",
 "url": <endpoint URL>,
-"events": <array of events that would registerwith this endpoint>
+"events": <array of events that would register with this endpoint>
 }
 ```
 **API 5: Delete a webhook endpoint**
