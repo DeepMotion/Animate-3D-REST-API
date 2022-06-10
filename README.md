@@ -64,7 +64,15 @@ Added videoSpeedMultiplier, poseFilteringStrength, rootAtOrigin parameters & new
 
 Added /character/deleteModel API
 
- 
+
+# _Alpha v1.5.3_
+
+Added trim & crop parameters in /process API
+
+
+# _Alpha v1.5.4_
+
+Added /account/creditBalance API
 
 The Animate 3D REST API lets you convert videos into 3D animations without having to use the DeepMotion [Web Portal](https://portal.deepmotion.com/). Instead you can upload, process, and download the resulting FBX/BVH animations directly from an external application like a web or desktop app.
 
@@ -332,6 +340,13 @@ We  have added few new parameters for better body tracking results:
 
 * Place a root joint at the origin of the output character. This is helpful in some cases, for example, for UE4 retargeting.
 * Default value is 0 and value can be either 0 or 1
+
+Trim (input video only) & Cropping( input video/image)
+
+
+
+* trim=from,to (in seconds, example: trim=1,2.6)
+* crop=left,top,right,bottom (normalized coordinate value, origin[0,0] is left-top, example: crop=0.239,0.121,0.742,0.981 )
 
 **Mp4 render out parameters:**
 
@@ -774,20 +789,20 @@ Each element in list is a JSON object with the following fields defined:
 </table>
 
 
-**API 7: Minutes Balance**
+**API 7: Credit Balance**
 
 
 <table>
   <tr>
    <td><strong>Desc</strong>
    </td>
-   <td>Retrieves Minutes Balance for an user
+   <td>Retrieves Credit Balance for an user
    </td>
   </tr>
   <tr>
    <td><strong>Method + URI</strong>
    </td>
-   <td>GET {host}/account/minutesBalance
+   <td>GET {host}/account/creditBalance
    </td>
   </tr>
   <tr>
@@ -809,7 +824,7 @@ Each element in list is a JSON object with the following fields defined:
 <p>
 {
 <p>
- "minutes":&lt;value>
+ "credits":&lt;value>
 <p>
 }
    </td>
