@@ -74,6 +74,11 @@ Added trim & crop parameters in /process API
 
 Added /account/creditBalance API
 
+
+# _Alpha v1.5.5_
+
+Added Hand/Finger Tracking parameter in /process API
+
 The Animate 3D REST API lets you convert videos into 3D animations without having to use the DeepMotion [Web Portal](https://portal.deepmotion.com/). Instead you can upload, process, and download the resulting FBX/BVH animations directly from an external application like a web or desktop app.
 
 
@@ -305,7 +310,16 @@ Added face tracking support:
 
 
 
-* Enable tracking basic facial expressions. Compatible with character models that contain ARKIT blend shapes. Enabling this option increases animation processing time.
+* Enable tracking basic facial expressions. Compatible with character models that contain ARKIT blend shapes. Enabling this option increases animation processing time (and additional charge if the server processes this for a compatible model).
+* Default value is 0 and value can be either 0 or 1 
+
+Added hand tracking support:
+
+**trackHand**
+
+
+
+* Enable tracking hand/finger movement. Compatible with character models that contain hand/finger joints. Enabling this option increases animation processing time (and additional charge if the server processes this for a compatible model).
 * Default value is 0 and value can be either 0 or 1 
 
 Another new parameter is: **poseEstimation.footLockingMode** or simply **footLockingMode**
