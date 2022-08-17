@@ -79,6 +79,16 @@ Added /account/creditBalance API
 
 Added Hand/Finger Tracking parameter in /process API
 
+
+# _Alpha v1.5.6_
+
+Added parameter for rerunning  a job in /process API. API Error codes with information have been added.
+
+
+# _Alpha v1.5.7_
+
+Added error messages
+
 The Animate 3D REST API lets you convert videos into 3D animations without having to use the DeepMotion [Web Portal](https://portal.deepmotion.com/). Instead you can upload, process, and download the resulting FBX/BVH animations directly from an external application like a web or desktop app.
 
 
@@ -103,10 +113,6 @@ Authorization: Basic MWEyYjozYzRk
 
 
 where `MWEyYjozYzRk` is the base64 encoded value of `1a2b:3c4d.`
-
-**Note**: Optionally it is possible to send a unique user identifier (via x-useruid HTTP(S) header) along with the authorization header . See example below:
-
-Curl -v -H “Authorization: Basic MWEyYjozYzRk” -H “x-useruid: [me.us@test.com](mailto:me.us@test.com)” -X GET “{host}/auth”
 
 
 # API Endpoints
@@ -268,13 +274,19 @@ attach raw bytes of the video file in the request body.
 <p>
   “url”: &lt;upload url>
 <p>
+  “rid”: &lt;previous successful job’s request id>
+<p>
   “processor”: &lt;processor_id>
 <p>
   “params": [&lt;params>, ...]
 <p>
 }
 <p>
-&lt;upload_url> should match url returned from GET /upload request
+&lt;upload_url> should match url returned from GET /upload request.
+<p>
+To rerun a job with different parameters, “rid” input should be used instead of “url”.
+<p>
+ 
 <p>
 &lt;processor_id> specifies which processor to use to process the video file, must be one of the following:
 
@@ -1456,6 +1468,185 @@ Response:
     "deleted": true
 <p>
 }
+   </td>
+  </tr>
+</table>
+
+
+
+# 
+
+
+# Animate 3D Restful API Error Codes
+
+
+<table>
+  <tr>
+   <td>Error Code
+   </td>
+   <td>Meaning
+   </td>
+  </tr>
+  <tr>
+   <td>201
+   </td>
+   <td>Error downloading the video or DM asset
+   </td>
+  </tr>
+  <tr>
+   <td>202
+   </td>
+   <td>Error converting the video
+   </td>
+  </tr>
+  <tr>
+   <td>503
+   </td>
+   <td>Error processing the parameters
+   </td>
+  </tr>
+  <tr>
+   <td>504
+   </td>
+   <td>Error loading the character assets
+   </td>
+  </tr>
+  <tr>
+   <td>505
+   </td>
+   <td>Physics Filter is incompatible with the custom characters
+   </td>
+  </tr>
+  <tr>
+   <td>506
+   </td>
+   <td>Error creating the pose estimation
+   </td>
+  </tr>
+  <tr>
+   <td>507
+   </td>
+   <td>Error while processing the body tracking
+   </td>
+  </tr>
+  <tr>
+   <td>508
+   </td>
+   <td>Input video or image doesn’t meet the requirements to generate animations of good quality 
+   </td>
+  </tr>
+  <tr>
+   <td>509
+   </td>
+   <td>Error loading the configurations
+   </td>
+  </tr>
+  <tr>
+   <td>510
+   </td>
+   <td>Error open internal files
+   </td>
+  </tr>
+  <tr>
+   <td>511
+   </td>
+   <td>Processing interrupted
+   </td>
+  </tr>
+  <tr>
+   <td>513
+   </td>
+   <td>Failed to detect character in the video
+   </td>
+  </tr>
+  <tr>
+   <td>599
+   </td>
+   <td>Body tracking timeout
+   </td>
+  </tr>
+  <tr>
+   <td>701
+   </td>
+   <td>Error processing the face tracking
+   </td>
+  </tr>
+  <tr>
+   <td>799
+   </td>
+   <td>Face tracking timeout
+   </td>
+  </tr>
+  <tr>
+   <td>901
+   </td>
+   <td>Error loading the mesh of the custom character
+   </td>
+  </tr>
+  <tr>
+   <td>902
+   </td>
+   <td>Error loading the BVH custom character
+   </td>
+  </tr>
+  <tr>
+   <td>903
+   </td>
+   <td>Error copying animations onto the custom character
+   </td>
+  </tr>
+  <tr>
+   <td>904
+   </td>
+   <td>Error exporting animations for the custom character
+   </td>
+  </tr>
+  <tr>
+   <td>905
+   </td>
+   <td>Custom character doesn’t include skinned mesh information
+   </td>
+  </tr>
+  <tr>
+   <td>906
+   </td>
+   <td>More than half of the required blendshapes are missing
+   </td>
+  </tr>
+  <tr>
+   <td>907
+   </td>
+   <td>Error loading facial definition for the custom character
+   </td>
+  </tr>
+  <tr>
+   <td>908
+   </td>
+   <td>Error loading facial tracking data
+   </td>
+  </tr>
+  <tr>
+   <td>909
+   </td>
+   <td>Error loading the metadata of the custom character
+   </td>
+  </tr>
+  <tr>
+   <td>999
+   </td>
+   <td>Animation baking timeout
+   </td>
+  </tr>
+  <tr>
+   <td>1301
+   </td>
+   <td>Error processing the hand tracking
+   </td>
+  </tr>
+  <tr>
+   <td>1399
+   </td>
+   <td>Hand tracking timeout
    </td>
   </tr>
 </table>
