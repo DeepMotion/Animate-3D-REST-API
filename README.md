@@ -682,6 +682,8 @@ Please note that if the specified request has not finished yet or has failed, th
   “rid”: “1234567890”
 <p>
 }
+<p>
+Note: .dmpe format is available with the name <strong>landmarks.dmpe</strong>
    </td>
   </tr>
 </table>
@@ -1640,7 +1642,49 @@ Response:
   <tr>
    <td>1301
    </td>
-   <td>Error processing the hand tracking
+   <td>Error creating the hand estimation
+   </td>
+  </tr>
+  <tr>
+   <td>1302
+   </td>
+   <td>Error creating the hand estimation
+   </td>
+  </tr>
+  <tr>
+   <td>1303
+   </td>
+   <td>Error creating the hand estimation
+   </td>
+  </tr>
+  <tr>
+   <td>1304
+   </td>
+   <td>Error opening the video
+   </td>
+  </tr>
+  <tr>
+   <td>1305
+   </td>
+   <td>Error parsing video path
+   </td>
+  </tr>
+  <tr>
+   <td>1306
+   </td>
+   <td>Error loading internal files
+   </td>
+  </tr>
+  <tr>
+   <td>1307
+   </td>
+   <td>Error processing hand tracking
+   </td>
+  </tr>
+  <tr>
+   <td>1308
+   </td>
+   <td>Error processing the video
    </td>
   </tr>
   <tr>
