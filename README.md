@@ -89,6 +89,11 @@ Added parameter for rerunning  a job in /process API. API Error codes with infor
 
 Added error messages
 
+
+# _Alpha v1.5.8_
+
+Added stockModel query param in /listModels api
+
 The Animate 3D REST API lets you convert videos into 3D animations without having to use the DeepMotion [Web Portal](https://portal.deepmotion.com/). Instead you can upload, process, and download the resulting FBX/BVH animations directly from an external application like a web or desktop app.
 
 
@@ -121,7 +126,6 @@ All Animate 3D API requests must be made against the following base URL using th
 
 
 ```
-Staging Environment: 		https://petest.deepmotion.com:443
 Production Environment: 	(Contact DeepMotion)
 ```
 
@@ -372,7 +376,16 @@ Trim (input video only) & Cropping( input video/image)
 
 
 * trim=from,to (in seconds, example: trim=1,2.6)
-* crop=left,top,right,bottom (normalized coordinate value, origin[0,0] is left-top, example: crop=0.239,0.121,0.742,0.981 )
+* crop=left,top,right,bottom (normalized coordinate value, origin[0,0] is left-top. Like, if original image is let's say [1080 x 1920], than applying the crop:
+
+    ```
+    crop=0.239,0.121,0.742,0.981
+    ```
+
+
+
+    would give us [543 x 1652].
+
 
 **Mp4 render out parameters:**
 
@@ -1063,6 +1076,8 @@ attach raw bytes of the model or thumbnail file in the request body.
 &lt;modelId>: existing model id (optional)
 <p>
 &lt;searchToken>: for example search by model name (optional)
+<p>
+&lt;stockModel>: = When this parameter is supplied, all stock models (including deepmotion & roblox) will return in api response along with the account's custom models. Beside that, each model details now include a platform field which can be one of the below values : custom, deepmotion, roblox . (optional)
    </td>
   </tr>
   <tr>
@@ -1085,6 +1100,8 @@ attach raw bytes of the model or thumbnail file in the request body.
    “ctime”: creation timestamp
 <p>
    “mtime”: modification timestamp
+<p>
+   “platform”: platform of the model 
 <p>
  }
 <p>
