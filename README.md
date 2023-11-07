@@ -94,6 +94,11 @@ Added error messages
 
 Added stockModel query param in /listModels api
 
+
+# _Alpha v2.0.0_
+
+Added experimental multi person api
+
 The Animate 3D REST API lets you convert videos into 3D animations without having to use the DeepMotion [Web Portal](https://portal.deepmotion.com/). Instead you can upload, process, and download the resulting FBX/BVH animations directly from an external application like a web or desktop app.
 
 
@@ -1493,7 +1498,182 @@ Response:
 
 
 
-# 
+# PeSave APIs
+
+**API 1: Retrieve peSave urls**
+
+
+<table>
+  <tr>
+   <td><strong>Desc</strong>
+   </td>
+   <td>returns peSave urls for single person or multi person jobs
+   </td>
+  </tr>
+  <tr>
+   <td><strong>Method + URI</strong>
+   </td>
+   <td>GET {host}/pesave/getUrls/rid
+   </td>
+  </tr>
+  <tr>
+   <td><strong>Header(s)</strong>
+   </td>
+   <td>cookie:dmsess=&lt;cookie-value-returned-from-authentication-api>
+   </td>
+  </tr>
+  <tr>
+   <td><strong>Request</strong>
+   </td>
+   <td>
+   </td>
+  </tr>
+  <tr>
+   <td><strong>Response</strong>
+   </td>
+   <td>JSON object for a MP job:
+<p>
+[
+<p>
+    {
+<p>
+        "trackingId": "001",
+<p>
+        "modifiedVersionReadUrl": null,
+<p>
+        "modifiedVersionWriteUrl": "&lt;URL>"
+<p>
+    },
+<p>
+    {
+<p>
+        "trackingId": "002",
+<p>
+        "modifiedVersionReadUrl": null,
+<p>
+        "modifiedVersionWriteUrl": "&lt;URL>"
+<p>
+    }
+<p>
+]
+   </td>
+  </tr>
+</table>
+
+
+Experimental Multi Person API
+
+Multi person feature does not introduce any new api so far. However changes to the existing APIs are mentioned here:
+
+Phase 1: Detect Characters for MP Job
+
+Use the same /**process **restful api with a new parameter.
+
+
+```
+pipeline=mp_detection
+
+{
+
+  "url": <video upload url>
+
+  "processor": video2anim
+
+  "params": ["pipeline=mp_detection"]
+
+}
+```
+
+
+No other parameters are required. Existing  /**status **api is used to query the status and/or /**download **api to download the characters_detection_result.cdsave  and person thumbnails (thumbnail_character_XXX.png) which represent the detected persons in the video and their thumbnails.
+
+The returned rid from this api gets used next for MP job processing, so should be cached/saved in memory at the client side.
+
+Phase 2: Process MP Job
+
+Use the same /**process** restful api with a new argument for a new job (not required for a rerun).
+
+
+```
+rid_mp_detection
+```
+
+
+and a new json input parameter **models **(a json string)** **in params object. Include some or all (up to 16) detected persons ids from the characters_detection_result.cdsave as value. The service will run the animation tracking process for those persons. Also associate a 3d model id from the library with each person’s detected id to represent the persons as animated 3d models in the output formats.
+
+No need to set the old **model **param which is being used for single person mode only.
+
+
+```
+{
+
+  "rid_mp_detection": <previous MP detection job rid>
+
+  "processor":'video2anim'
+
+  "params": ["models=[{trackingId:'001', modelId:'model_id'}, ...]", ...]
+
+}
+```
+
+
+This is a regular MP job processing sample  For a successful job, Existing  download and list api response  will contain two additional fields:
+
+
+```
+{
+
+  "mode": <0=single person or 1=multi person>
+
+  "models":[{trackingId:<value>, modelId:<value>, faceDataType:<value>, handDataType:<value>}, ...]
+
+}
+```
+
+
+The returned rid from this api will be the same as the input rid_mp_detection argument.
+
+Rerun will be the same as before. However, for MP jobs, /pesave/getUrls api will return an array containing peSaves for each character.
+
+Download
+
+Downloading the relevant files for MP is similar to Single Person, just a character detection/tracking ID (in the format of _XXX) will be appended for every relevant file name.
+
+Additionally, format wise all character/person files (like output bvh files of all characters are put in a single archive) are also available in the download api response.
+
+{
+
+                    "name": "all_characters",
+
+                    "files": [
+
+                        {
+
+                            "fbx": "&lt;URL>"
+
+                        },
+
+                        {
+
+                            "bvh": "&lt;URL>"
+
+                        },
+
+                        {
+
+                            "glb": "&lt;URL>"
+
+                        },
+
+                        {
+
+                            "dmpe": "&lt;URL>"
+
+                        }
+
+                    ]
+
+     }
 
 
 # Animate 3D Restful API Error Codes
@@ -1711,3 +1891,4 @@ Response:
    </td>
   </tr>
 </table>
+
