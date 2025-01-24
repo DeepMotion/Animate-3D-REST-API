@@ -212,7 +212,14 @@ job you want to download.\n""")
                 if 'mp4' in file:
                     uri = file['mp4']
                     dowloadResp = session.get(uri)
-                    outputFile = dPath + fileUrl['name'] + '.mp4' + ('.zip' if name == 'all_characters' else '')
+                    outputFile = dPath + fileUrl['name'] + '.mp4'
+                    with open(outputFile, 'wb') as f:
+                        f.write(dowloadResp.content)
+                        print('\nFile saved to ' + outputFile)
+                if 'glb' in file:
+                    uri = file['glb']
+                    dowloadResp = session.get(uri)
+                    outputFile = dPath + fileUrl['name'] + '.glb' + ('.zip' if name == 'all_characters' else '')
                     with open(outputFile, 'wb') as f:
                         f.write(dowloadResp.content)
                         print('\nFile saved to ' + outputFile)
