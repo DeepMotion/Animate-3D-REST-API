@@ -4,7 +4,11 @@ import json
 import requests
 import time
 
+# Please replace _apiServerUrl, _clientId and _clientSecret with credentials from your Animate 3D Rest API Portal
+
 _apiServerUrl = 'copy_your_Production URL_here_from_API_portal'
+_clientId = 'copy_your_clientId_here_from_API_portal'
+_clientSecret = 'copy_your_clientSecret_here_from_API_portal'
 
 def check_json(fpath):
     if not os.path.exists(fpath):
@@ -26,9 +30,7 @@ def parse_user_credentials():
 
 def set_user_credentials():
     global _sessionCredentials
-    clientId = 'copy_your_clientId_here_from_API_portal'
-    clientSecret = 'copy_your_clientSecret_here_from_API_portal'
-    _sessionCredentials = clientId, clientSecret
+    _sessionCredentials = _clientId, _clientSecret
     global session
     session = get_session()
     print('Credentials successfully set. \n')
@@ -276,13 +278,7 @@ def new_job():
         vFile = f.read()
     if vFile == None:
         raise argparse.ArgumentTypeError('Could not read %r.' % fullPath)
-    
-    #charResp = get_response('/character/listModels').text
-    #charRespJson = json.loads(charResp)
-    #charList = charRespJson['list']
-    #call_print_list_portion(charList, 'name', 'id')
-    #print(str(len(charList) + 1) + ') None')
- 
+
     charList = display_models()
     charSel = int(input("""\nInput the index of the character you want to use : """))
     modelStr = 'model=' + charList[charSel - 1]['id']
