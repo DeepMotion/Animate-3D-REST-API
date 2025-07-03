@@ -317,7 +317,7 @@ To rerun a job with different parameters, “rid” input should be used instead
 
 &lt;params> specifies additional parameters that will be passed to the specified processor, for example:
 
-   "params": [ "config=configDefault","formats=bvh,fbx,mp4","&lt;model=<modelId>" ]
+   "params": [ "config=configDefault","formats=bvh,fbx,mp4","model=<Model ID string>" ]
 
 For static pose, png/jpg can be included in the formats parameter, like: formats=bvh,fbx,png (to output rendered image instead of rendered video)
 
