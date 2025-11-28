@@ -355,20 +355,17 @@ Another new parameter is: **poseEstimation.footLockingMode** or simply **footLoc
 
 We  have added few new parameters for better body tracking results:
 
-**poseEstimation.videoSpeedMultiplier **or simply **videoSpeedMultiplier**
-
-
-
+**poseEstimation.videoSpeedMultiplier** or simply **videoSpeedMultiplier**
 * For input videos that have been slowed down, enabling this option can help improve the resulting animation quality. For example, if your input video speed moves at 1/2 speed, then set the speed multiplier to 2x to improve animation quality
 * Default value is 1.0 and range is 1.0 - 8.0
 
-**poseEstimation.poseFilteringStrength **or simply **poseFilteringStrength**
-
-
-
+**poseEstimation.poseFilteringStrength** or simply **poseFilteringStrength**
 * Applies an advanced AI filter that helps remove jitter and produce smoother animations though may result in lower animation accuracy for certain frames or sequences
 * Default value is 0.0 and range is 0.0 - 1.0 
 
+**poseEstimation.upperBodyOnly** or simply **upperBodyOnly**
+* Only track the upper body motion or pose from the input video or image. The lower body motion or pose will be copied from the Fallback Pose configured.
+* Optional values are true or false
 
 Trim (input video only) & Cropping( input video/image)
 
