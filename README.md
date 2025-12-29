@@ -1678,6 +1678,12 @@ Additionally, format wise all character/person files (like output bvh files of a
    </td>
   </tr>
   <tr>
+   <td>101
+   </td>
+   <td>Not enough credits
+   </td>
+  </tr>
+  <tr>
    <td>201
    </td>
    <td>Error downloading the video or DM asset
