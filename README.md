@@ -556,7 +556,7 @@ Each element in status array is a JSON object:
 
 {
 
-  “In”: &lt;original video file>,
+  “in”: &lt;original video file>,
 
   “out”: &lt;processed video file>
 
