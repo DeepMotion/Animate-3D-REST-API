@@ -102,6 +102,14 @@ Added experimental multi person api
 The Animate 3D REST API lets you convert videos into 3D animations without having to use the DeepMotion [Web Portal](https://portal.deepmotion.com/). Instead you can upload, process, and download the resulting FBX/BVH animations directly from an external application like a web or desktop app.
 
 
+## Python SDK
+
+For Python developers, an official SDK is available to simplify integration:
+
+- **Install**: `pip install dm-animate3d-api` — [PyPI](https://pypi.org/project/dm-animate3d-api/)
+- **Source**: [GitHub](https://github.com/yaksea/dm-animate3d-api-python-sdk)
+
+
 # Authentication
 
 The Animate 3D REST API uses basic **HTTP Authentication** to keep your requests and data secure. To use the API you will need a **Client ID** and a **Client Secret **which are provided by DeepMotion. If you do not have these please contact DeepMotion Support or your sales representative.
