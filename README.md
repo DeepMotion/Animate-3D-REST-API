@@ -1,108 +1,108 @@
 # **Animate 3D REST API**
 
 
-## Revisions
+# Revisions
 
 
-# _Alpha v1.0.0_
+## _Alpha v1.0.0_
 
 Initial rest APIs
 
 
-# _Alpha v1.0.1_
+## _Alpha v1.0.1_
 
 Added model parameter to the /process API
 
 
-# _Alpha v1.2.0_
+## _Alpha v1.2.0_
 
 Added custom character end points  /character
 
 
-# _Alpha v1.2.1_
+## _Alpha v1.2.1_
 
 Added the “sim” parameter to API 3: Start Video Processing
 
 
-# _Alpha v1.2.2_
+## _Alpha v1.2.2_
 
 Added the “camera” parameter to API 3: Start Video Processing
 
 
-# _Alpha v1.3.0_
+## _Alpha v1.3.0_
 
 Added webhook APIs
 
 
-# _Alpha v1.4.0_
+## _Alpha v1.4.0_
 
 Added footLockingMode parameter to the /process API
 
 Added new minutesBalance API
 
 
-# _Alpha v1.4.1_
+## _Alpha v1.4.1_
 
 Added flag “createThumb” to /character/storeModel API
 
 
-# _Alpha v1.5.0_
+## _Alpha v1.5.0_
 
 Exposed mp4 render out parameters in /process API
 
 Added Face Tracking parameter in /process API
 
 
-# _Alpha v1.5.1_
+## _Alpha v1.5.1_
 
 Added /videoInfo API
 
 Added videoSpeedMultiplier, poseFilteringStrength, rootAtOrigin parameters & new mp4 options in /process API
 
 
-# _Alpha v1.5.2_
+## _Alpha v1.5.2_
 
 Added /character/deleteModel API
 
 
-# _Alpha v1.5.3_
+## _Alpha v1.5.3_
 
 Added trim & crop parameters in /process API
 
 
-# _Alpha v1.5.4_
+## _Alpha v1.5.4_
 
 Added /account/creditBalance API
 
 
-# _Alpha v1.5.5_
+## _Alpha v1.5.5_
 
 Added Hand/Finger Tracking parameter in /process API
 
 
-# _Alpha v1.5.6_
+## _Alpha v1.5.6_
 
 Added parameter for rerunning  a job in /process API. API Error codes with information have been added.
 
 
-# _Alpha v1.5.7_
+## _Alpha v1.5.7_
 
 Added error messages
 
 
-# _Alpha v1.5.8_
+## _Alpha v1.5.8_
 
 Added stockModel query param in /listModels api
 
 
-# _Alpha v2.0.0_
+## _Alpha v2.0.0_
 
 Added experimental multi person api
 
 The Animate 3D REST API lets you convert videos into 3D animations without having to use the DeepMotion [Web Portal](https://portal.deepmotion.com/). Instead you can upload, process, and download the resulting FBX/BVH animations directly from an external application like a web or desktop app.
 
 
-## Python SDK
+# Python SDK
 
 For Python developers, an official SDK is available to simplify integration:
 
