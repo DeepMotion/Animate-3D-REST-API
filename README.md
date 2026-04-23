@@ -111,7 +111,7 @@ For Python developers, an official SDK is available to simplify integration:
 
 ## JavaScript/TypeScript SDK
 
-For Python developers, an official SDK is available to simplify integration:
+For NodeJS developers, an official SDK is available to simplify integration:
 
 - **Install**: `npm install dm-animate3d-api` — [npmjs](https://www.npmjs.com/package/dm-animate3d-api)
 - **Source**: [GitHub](https://github.com/yaksea/dm-animate3d-api-js-sdk)
